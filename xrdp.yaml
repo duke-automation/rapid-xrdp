@@ -20,7 +20,7 @@
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
     - name: Setup startwm.sh
-      copy: src=startwm.sh dest=/etc/xrdp/startwm.sh owner=root group=root mode=644 backup=yes
+      copy: src=startwm.sh dest=/etc/xrdp/startwm.sh owner=root group=root mode=755 backup=yes
       notify: restart xrdp
 
   handlers:
