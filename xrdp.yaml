@@ -25,4 +25,4 @@
 
   handlers:
     - name: restart xrdp
-      command: service xrdp restart
+      service: name=xrdp state=restarted
