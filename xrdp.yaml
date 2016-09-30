@@ -22,6 +22,8 @@
       with_items:
         - xrdp
         - xterm
+        - gnome-icon-theme
+        - mate-icon-theme
         - mate-desktop
         - mate-session-manager
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
