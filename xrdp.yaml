@@ -8,8 +8,11 @@
       yum: name={{ item }} state=present disable_gpg_check=yes
       with_items:
         - xrdp
-        - mate-session-manager
         - mate-desktop
+        - mate-session-manager
+        - gnome-icon-theme
+        - mate-icon-theme
+        - nautilus
       when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
 
     - name: Install dependencies (Ubuntu/Debian)
