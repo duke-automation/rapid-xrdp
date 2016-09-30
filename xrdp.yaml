@@ -5,10 +5,11 @@
   tasks:
 
     - name: Install dependencies (CentOS/RHEL)
-      yum: name={{ item }} state=present
+      yum: name={{ item }} state=present disable_gpg_check=yes
       with_items:
-        - nfs-utils
-        - xorg-x11-xauth
+        - xrdp
+        - mate-session-manager
+        - mate-desktop
       when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
 
     - name: Install dependencies (Ubuntu/Debian)
@@ -19,10 +20,34 @@
         - mate-session-manager
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-    - name: Setup startwm.sh
-      copy: src=startwm.sh dest=/etc/xrdp/startwm.sh owner=root group=root mode=755 backup=yes
+    - name: Enable xrdp at boot
+      service: name=xrdp enabled=yes
+
+    - name: Setup startwm.sh on Ubuntu
+      copy: src=startwm-ubuntu.sh dest=/etc/xrdp/startwm.sh owner=root group=root mode=755 backup=yes
       notify: restart xrdp
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Setup startwm.sh on RHEL
+      copy: src=startwm-rhel.sh dest=/etc/xrdp/startwm.sh owner=root group=root mode=755 backup=yes
+      notify: restart xrdp
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+    - name: Open up Firewall
+      command: firewall-cmd --permanent --zone=public --add-port=3389/tcp
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+      notify: Reload Firewall
+
+    - name: Fix SELinux Contexts
+      command: chcon --type=bin_t /usr/sbin/xrdp /usr/sbin/xrdp-sesman
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+      notify: restart xrdp
+
 
   handlers:
     - name: restart xrdp
       service: name=xrdp state=restarted
+
+    - name: Reload Firewall
+      command: firewall-cmd --reload
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
