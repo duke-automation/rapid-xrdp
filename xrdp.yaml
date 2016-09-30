@@ -8,7 +8,9 @@
       yum: name={{ item }} state=present disable_gpg_check=yes
       with_items:
         - xrdp
+        - xterm
         - mate-desktop
+        - gnome-session
         - mate-session-manager
         - gnome-icon-theme
         - mate-icon-theme
@@ -19,6 +21,7 @@
       apt: name={{ item }} state=present update_cache=yes
       with_items:
         - xrdp
+        - xterm
         - mate-desktop
         - mate-session-manager
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
