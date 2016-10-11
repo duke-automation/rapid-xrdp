@@ -9,9 +9,7 @@ Ansible
 
 Sudo rights on the server
 
-RHEL7
-
-Ubuntu 16.04
+RHEL7 or Ubuntu 16.04
 
 ## Usage
 ```
